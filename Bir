@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday! 🎁</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffe6e6;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+            overflow: hidden;
+            margin: 0;
+        }
+        #screen0, #screen1, #screen2, #screen3 {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        #screen0 { display: flex; } /* Show lock screen first */
+        .gift-box { 
+            font-size: 100px; 
+            cursor: pointer; 
+            animation: bounce 1.5s infinite; 
+            margin-top: 20px;
+        }
+        @keyframes bounce { 
+            0%, 100% { transform: translateY(0); } 
+            50% { transform: translateY(-20px); } 
+        }
+        .card {
+            background: white; 
+            padding: 30px; 
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+            max-width: 400px; 
+        }
+        .letter {
+            background: #fff9e6; 
+            padding: 30px; 
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+            max-width: 500px;
+            text-align: left; 
+            font-size: 18px; 
+            line-height: 1.6; 
+            border-left: 5px solid #ff4d79;
+        }
+        .btn-container {
+            margin-top: 20px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        button {
+            padding: 12px 30px; 
+            font-size: 18px; 
+            border: none;
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            margin: 0 10px;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ff4d79;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+            width: 80%;
+        }
+        #yesBtn { background-color: #4CAF50; color: white; }
+        #noBtn { background-color: #ff4d4d; color: white; }
+        #unlockBtn { background-color: #ff4d79; color: white; }
+        h1 { color: #ff4d79; }
+        #errorMsg { color: red; display: none; font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- Screen 0: The Lock -->
+    <div id="screen0" class="card">
+        <h1>It's locked! 🔒</h1>
+        <p>Hint: password is your name 😉</p>
+        <input type="text" id="passInput" placeholder="Enter password...">
+        <button id="unlockBtn" onclick="checkPassword()">Unlock 🔑</button>
+        <p id="errorMsg">Wrong password! Try again 😂</p>
+    </div>
+
+    <!-- Screen 1: The Gift -->
+    <div id="screen1">
+        <h1>Click to open your present! 🎀</h1>
+        <div class="gift-box" onclick="openGift()">🎁</div>
+    </div>
+
+    <!-- Screen 2: The Questions -->
+    <div id="screen2" class="card">
+        <h1>Happy Birthday! 🎉</h1>
+        <h2 id="questionText">Do you know how special you are? ✨</h2>
+        <div class="btn-container">
+            <button id="yesBtn" onclick="nextQuestion()">Yes 😌</button>
+            <button id="noBtn" onmouseover="moveNo()" onclick="moveNo()">No 😒</button>
+        </div>
+    </div>
+
+    <!-- Screen 3: The Letter -->
+    <div id="screen3">
+        <h1>I knew it! </h1>
+        <div class="letter">
+            Dear Birthday Star, <br><br>
+            Happy Birthday! 🎂 I just wanted to take a moment to write this letter to remind you of how truly special you are. You bring so much light and joy into the world, and everyone around you is lucky to know you. <br><br>
+            Your kindness, your laugh, and just the way you are make everything better. I hope today brings you as much happiness as you give to others every single day. <br><br>
+            Take time to celebrate yourself today. Eat all the cake, make a big wish, and remember that this whole year ahead is going to be your best one yet. Never stop being your incredible self! <br><br>
+            Wishing you the happiest of birthdays and a year filled with love, success, and amazing memories. 🥳✨
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            "Do you know how special you are? ✨",
+            "Are you ready for the best year ahead? 🌟",
+            "You are the most amazing person aren't you? 😏"
+        ];
+        let currentQ = 0;
+
+        function checkPassword() {
+            // .trim() removes extra spaces from phone auto-correct
+            const pass = document.getElementById('passInput').value.trim().toLowerCase();
+            
+            // Put their name inside the single quotes below!
+            if (pass === 'nesma') { 
+                document.getElementById('screen0').style.display = 'none';
+                document.getElementById('screen1').style.display = 'flex';
+            } else {
+                document.getElementById('errorMsg').style.display = 'block';
+            }
+        }
+
+        function openGift() {
+            document.getElementById('screen1').style.display = 'none';
+            document.getElementById('screen2').style.display = 'flex';
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            if (currentQ < questions.length) {
+                document.getElementById('questionText').innerText = questions[currentQ];
+                
+                // Reset the No button position
+                const btn = document.getElementById('noBtn');
+                btn.style.position = 'static';
+            } else {
+                document.getElementById('screen2').style.display = 'none';
+                document.getElementById('screen3').style.display = 'flex';
+            }
+        }
+
+        function moveNo() {
+            const btn = document.getElementById('noBtn');
+            btn.style.position = 'fixed';
+            
+            const maxX = window.innerWidth - btn.clientWidth;
+            const maxY = window.innerHeight - btn.clientHeight;
+            
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+        }
+    </script>
+
+</body>
+</html>
+
